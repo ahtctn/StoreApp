@@ -39,11 +39,19 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ProductsTableViewCell
         let category = categories[indexPath.row]
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ProductsTableViewCell
-        cell.productImage.image = UIImage(systemName: "person.fill")
-        cell.productNameLabel.text = category.name
+        if let url = URL(string: category.image),
+           let data = try? Data(contentsOf: url),
+           let image = UIImage(data: data){
+                    DispatchQueue.main.async {
+                        cell.productNameLabel.text = category.name
+                        cell.productImage.image = image
+                    }
+                
+        }
+        
         return cell
     }
 

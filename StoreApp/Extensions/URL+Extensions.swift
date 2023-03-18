@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension URL {
     static var development: URL {
@@ -30,5 +31,21 @@ extension URL {
     
     static func productsByCategory(_ categoryId: Int) -> URL {
         return URL(string: "/api/v1/categories/\(categoryId)/products", relativeTo: Self.default)!
+    }
+}
+
+extension UIImageView {
+    func loadFrom(URLAddress: String) {
+        guard let url = URL(string: URLAddress) else {
+            return
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            if let imageData = try? Data(contentsOf: url) {
+                if let loadedImage = UIImage(data: imageData) {
+                        self?.image = loadedImage
+                }
+            }
+        }
     }
 }
